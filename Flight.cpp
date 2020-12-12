@@ -10,25 +10,29 @@ using namespace std;
 enum Seat { Economy, Premium, Business};
  
 enum Airline { Delta, United, SouthWest};
- 
+
+
 unordered_map<string, Airline> airlines {
   {"Delta", Delta}, 
   {"United", United}, 
   {"SouthWest", SouthWest}
 };
  
+
 unordered_map<string, Seat> seats{
   {"Economy", Economy}, 
   {"Premium", Premium}, 
   {"Business",Business}
 };
  
+
 struct Ticket {
     Airline airline;
     Seat seat;
     float distance; // in miles
 };
  
+
 class AirlineCalculator{
 public:
     // Factory pattern
@@ -37,6 +41,7 @@ public:
     virtual float calculate(const Ticket& ticket) const = 0;
     virtual ~AirlineCalculator() = default;
  
+
 protected:
     // Calculate operating cost
     virtual float getOpCost (Ticket ticket) const {
@@ -56,6 +61,7 @@ protected:
     virtual float getEconomyOpCost (float d) const {
         return 0.0;
     }
+
     virtual float getPremiumOpCost (float d) const {
         return 25.0;
     }
@@ -64,6 +70,7 @@ protected:
     }
 };
 
+
 class DeltaCalculator:public AirlineCalculator{
 public:
     float calculate(const Ticket& ticket) const override {
@@ -71,6 +78,7 @@ public:
         return opCost + ticket.distance * 0.5;
     }
      
+
     // Meyers' Singleton
     static AirlineCalculator* instance(){
         static DeltaCalculator calc;
@@ -82,6 +90,7 @@ public:
 private:
     DeltaCalculator() = default;
 };
+
 
 class UnitedCalculator:public AirlineCalculator{
 public:
@@ -106,6 +115,7 @@ protected:
     }
 };
 
+
 class SouthwestCalculator:public AirlineCalculator{
 public:
      
@@ -120,11 +130,15 @@ public:
  
     virtual ~SouthwestCalculator() = default;
  
+
 private:
+
     SouthwestCalculator() = default;
 };
 
+
 // Factory pattern
+
 AirlineCalculator*  AirlineCalculator::create(Airline airline){
     switch(airline) {
         case Delta:
@@ -138,6 +152,7 @@ AirlineCalculator*  AirlineCalculator::create(Airline airline){
             return SouthwestCalculator::instance();
     }
 }
+
 
 static Ticket parse_ticket(const string& s) {
     // split by space
@@ -158,6 +173,7 @@ static Ticket parse_ticket(const string& s) {
     return ticket;
 }
 
+
 // unordered_map<string, AirlineCalculator*> airclcs{{"Delta",DeltaCalculator::instance()}, {"United",UnitedCalculator::instance()}, {"SouthWest",SouthwestCalculator::instance()}};
  
 vector<float> process_tickets(vector<string> tickets){
@@ -166,11 +182,13 @@ vector<float> process_tickets(vector<string> tickets){
         Ticket ticket = parse_ticket(ticket_str);
   
         AirlineCalculator* clc = AirlineCalculator::create(ticket.airline);
+
         costs.push_back(clc->calculate(ticket));
     }
     return costs;
 }
   
+
 int main() {
     vector<string> input{"United 150.0 Premium", "United 120.0 Economy","United 100.0 Business","Delta 60.0 Economy","Delta 60.0 Premium","Delta 60.0 Business", "SouthWest 1000.0 Economy", "SouthWest 4000.0 Economy"};
     vector<float> costs = process_tickets(input);
@@ -179,3 +197,5 @@ int main() {
     }
     return 0;
 }
+
+
