@@ -9,12 +9,13 @@ using namespace std;
 
 enum Seat { Economy, Premium, Business};
  
-enum Airline { Delta, United, SouthWest};
- 
+enum Airline { Delta, United, SouthWest, LuigiAir};
+
 unordered_map<string, Airline> airlines {
   {"Delta", Delta}, 
   {"United", United}, 
-  {"SouthWest", SouthWest}
+  {"SouthWest", SouthWest},
+  {"LuigiAir", LuigiAir}
 };
  
 unordered_map<string, Seat> seats{
@@ -124,6 +125,25 @@ private:
     SouthwestCalculator() = default;
 };
 
+class LuigiAirCalculator:public AirlineCalculator{
+public:
+    float calculate(const Ticket& ticket) const override {
+        float opCost = getOpCost(ticket);
+        return max(2*opCost, (float)100);
+    }
+     
+    // Meyers' Singleton
+    static AirlineCalculator* instance(){
+        static LuigiAirCalculator calc;
+        return &calc;
+    }
+ 
+    virtual ~LuigiAirCalculator() = default;
+   
+private:
+    LuigiAirCalculator() = default;
+};
+
 // Factory pattern
 AirlineCalculator*  AirlineCalculator::create(Airline airline){
     switch(airline) {
@@ -136,6 +156,9 @@ AirlineCalculator*  AirlineCalculator::create(Airline airline){
         case SouthWest:
             // Singleton pattern
             return SouthwestCalculator::instance();
+        case LuigiAir:
+            //Singleton pattern
+            return LuigiAirCalculator::instance();
     }
 }
 
@@ -172,7 +195,7 @@ vector<float> process_tickets(vector<string> tickets){
 }
   
 int main() {
-    vector<string> input{"United 150.0 Premium", "United 120.0 Economy","United 100.0 Business","Delta 60.0 Economy","Delta 60.0 Premium","Delta 60.0 Business", "SouthWest 1000.0 Economy", "SouthWest 4000.0 Economy"};
+    vector<string> input{"United 150.0 Premium", "United 120.0 Economy","United 100.0 Business","Delta 60.0 Economy","Delta 60.0 Premium","Delta 60.0 Business", "SouthWest 1000.0 Economy", "SouthWest 4000.0 Economy", "LuigiAir 50.0 Business"};
     vector<float> costs = process_tickets(input);
     for(int i = 0 ; i < input.size(); i++){
         cout << input[i] << " cost: $" << costs[i]<< endl;
