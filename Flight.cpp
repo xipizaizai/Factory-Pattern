@@ -129,7 +129,7 @@ class LuigiAirCalculator:public AirlineCalculator{
 public:
     float calculate(const Ticket& ticket) const override {
         float opCost = getOpCost(ticket);
-        return max(2*opCost, (float)100);
+        return max(2*opCost, 100.f);
     }
      
     // Meyers' Singleton
