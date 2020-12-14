@@ -75,8 +75,6 @@ public:
    
 private:
     DeltaCalculator() = default;
-
-protected:
     static DeltaCalculator* calc;
 };
 DeltaCalculator* DeltaCalculator::calc = nullptr;
@@ -101,13 +99,11 @@ public:
  
 private:
     UnitedCalculator() = default;
-
+    static UnitedCalculator* calc;
 protected:
-
     float getPremiumOpCost(float d) const override {
         return 25. + 0.1 * d;
     }
-    static UnitedCalculator* calc;
 };
 UnitedCalculator* UnitedCalculator::calc = nullptr;
 
@@ -132,7 +128,6 @@ public:
  
 private:
     SouthwestCalculator() = default;
-protected:
     static SouthwestCalculator* calc;
 };
 SouthwestCalculator* SouthwestCalculator::calc = nullptr;
@@ -159,7 +154,6 @@ public:
    
 private:
     LuigiAirCalculator() = default;
-protected:
     static LuigiAirCalculator* calc;
 };
 LuigiAirCalculator* LuigiAirCalculator::calc = nullptr;
