@@ -70,22 +70,20 @@ public:
         float opCost = getOpCost(ticket);
         return opCost + ticket.distance * 0.5;
     }
-    static DeltaCalculator* getInstance();
+    static DeltaCalculator* getInstance(){
+        if(calc == nullptr){
+            cout<<"create DT instance"<<endl;
+            calc = new DeltaCalculator();
+        }
+        return calc;
+    }
     virtual ~DeltaCalculator() = default;
-   
 private:
     DeltaCalculator() = default;
     static DeltaCalculator* calc;
 };
 DeltaCalculator* DeltaCalculator::calc = nullptr;
 
-DeltaCalculator* DeltaCalculator::getInstance(){
-    if(calc == nullptr){
-        cout<<"create DT instance"<<endl;
-        calc = new DeltaCalculator();
-    }
-    return calc;
-}
 //UnitedAirline
 class UnitedCalculator:public AirlineCalculator{
 public:
@@ -93,13 +91,19 @@ public:
         float opCost = getOpCost(ticket);
         return opCost + ticket.distance * 0.75;
     }
-
-    static UnitedCalculator* getInstance();
+    static UnitedCalculator* getInstance(){
+        if(calc == nullptr){
+            cout<<"create UN instance"<<endl;
+            calc = new UnitedCalculator();
+        }
+        return calc;
+    }
     virtual ~UnitedCalculator() = default;
- 
+
 private:
     UnitedCalculator() = default;
     static UnitedCalculator* calc;
+
 protected:
     float getPremiumOpCost(float d) const override {
         return 25. + 0.1 * d;
@@ -107,23 +111,19 @@ protected:
 };
 UnitedCalculator* UnitedCalculator::calc = nullptr;
 
-UnitedCalculator* UnitedCalculator::getInstance(){
-    if(calc == nullptr){
-        cout<<"create UN instance"<<endl;
-        calc = new UnitedCalculator();
-    }
-    return calc;
-}
 //SouthWest Airline
 class SouthwestCalculator:public AirlineCalculator{
 public:
-     
     float calculate(const Ticket& ticket) const override{
         return 1. * ticket.distance;
     }
- 
-    static SouthwestCalculator* getInstance();
- 
+    static SouthwestCalculator* getInstance(){
+        if(calc == nullptr){
+            cout<<"create SW instance"<<endl;
+            calc = new SouthwestCalculator();
+        }
+        return calc;
+    }
     virtual ~SouthwestCalculator() = default;
  
 private:
@@ -132,13 +132,6 @@ private:
 };
 SouthwestCalculator* SouthwestCalculator::calc = nullptr;
 
-SouthwestCalculator* SouthwestCalculator::getInstance(){
-    if(calc == nullptr){
-        cout<<"create SW instance"<<endl;
-        calc = new SouthwestCalculator();
-    }
-    return calc;
-}
 //LuigiAirline
 class LuigiAirCalculator:public AirlineCalculator{
 public:
@@ -146,10 +139,14 @@ public:
         float opCost = getOpCost(ticket);
         return max(2*opCost, 100.f);
     }
-     
     // Meyers' Singleton
-    static LuigiAirCalculator* getInstance();
- 
+    static LuigiAirCalculator* getInstance(){
+        if(calc == nullptr){
+            cout<<"create LG instance"<<endl;
+            calc = new LuigiAirCalculator();
+        }
+        return calc;
+    }
     virtual ~LuigiAirCalculator() = default;
    
 private:
@@ -158,27 +155,16 @@ private:
 };
 LuigiAirCalculator* LuigiAirCalculator::calc = nullptr;
 
-LuigiAirCalculator* LuigiAirCalculator::getInstance(){
-    if(calc == nullptr){
-        cout<<"create LG instance"<<endl;
-        calc = new LuigiAirCalculator();
-    }
-    return calc;
-}
 // Factory pattern
 AirlineCalculator*  AirlineCalculator::getInstance(Airline airline){
     switch(airline) {
         case Delta:
-            // Singleton pattern
             return DeltaCalculator::getInstance();
         case United:
-            // Singleton pattern
             return UnitedCalculator::getInstance();
         case SouthWest:
-            // Singleton pattern
             return SouthwestCalculator::getInstance();
         case LuigiAir:
-            //Singleton pattern
             return LuigiAirCalculator::getInstance();
     }
 }
@@ -211,7 +197,7 @@ vector<float> process_tickets(vector<string> tickets){
     return costs;
 }  
 int main() {
-    vector<string> input{"United 150.0 Premium", "United 120.0 Economy","United 100.0 Business","Delta 60.0 Economy","Delta 60.0 Premium","Delta 60.0 Business", "SouthWest 1000.0 Economy", "SouthWest 4000.0 Economy", "LuigiAir 50.0 Business"};
+    vector<string> input{"United 150.0 Premium", "United 120.0 Economy","United 100.0 Business","United 60.0 Economy","United 60.0 Premium","Delta 60.0 Business", "SouthWest 1000.0 Economy", "SouthWest 4000.0 Economy", "LuigiAir 50.0 Business"};
     vector<float> costs = process_tickets(input);
     for(int i = 0 ; i < input.size(); i++){
         cout << input[i] << " cost: $" << costs[i]<< endl;
